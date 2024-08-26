@@ -7,14 +7,17 @@
                     <h4>Blog Search</h4>
                 </div>
                 <div class="card-body">
-                    <div class="input-group">
-                        <input type="text" class="form-control">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">
-                                <span class="glyphicon glyphicon-search"></span>
-                            </button>
-                        </span>
-                    </div>
+                    <form action="" method="post">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="searchQuery">
+                            <span class="input-group-btn">
+                                <button class="btn btn-primary" type="submit" name="searchSubmit">
+                                    <span class="fa fa-search"></span>
+                                </button>
+                            </span>
+
+                        </div>
+                    </form>
                 </div>
                 <!-- /.input-group -->
             </div>

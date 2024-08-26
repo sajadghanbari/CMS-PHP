@@ -36,5 +36,11 @@ class Category extends DB
         return $this->connect()->query("select * from categories")->fetchAll(PDO::FETCH_ASSOC);
     }
 }
-
+class Post extends DB
+{
+    public function getAllPosts()
+    {
+        return $this->connect()->query("select * from posts")->fetchAll(PDO::FETCH_ASSOC);
+    }
+}
 ?>
