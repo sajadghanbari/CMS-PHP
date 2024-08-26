@@ -1,8 +1,7 @@
 <?php include "inc/header.php"?>
 <?php include "inc/navigation.php"?>
-<?php include_once "class/Category.php"?>
-<?php include_once("class/DB.php")
-?><body>
+<?php include_once "class/DB.php"?>
+<body>
 <!-- Page Content -->
 <div class="container">
 

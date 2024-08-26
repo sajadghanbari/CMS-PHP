@@ -12,7 +12,7 @@
                         <span class="input-group-btn">
                             <button class="btn btn-default" type="button">
                                 <span class="glyphicon glyphicon-search"></span>
-                        </button>
+                            </button>
                         </span>
                     </div>
                 </div>
@@ -26,29 +26,37 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
+                        <?php
+                        include_once "class/DB.php";
+                        $cat = new Category();
+                        $cats = $cat->getallcategories();
+                        $cnt = count($cats);
+                        ?>
                         <div class="col-lg-6">
                             <ul class="list-unstyled">
-                                <li><a href="#">Category Name</a>
-                                </li>
-                                <li><a href="#">Category Name</a>
-                                </li>
-                                <li><a href="#">Category Name</a>
-                                </li>
-                                <li><a href="#">Category Name</a>
-                                </li>
+                                <?php
+                        for ($i = 0; $i <= $cnt/2; $i++)
+                        {
+                         ?>
+                                <li><a href="#"><?=$cats[$i]["name"]?></a></li>
+
+                                <?php    
+                        }
+                        ?>
                             </ul>
                         </div>
-                        <!-- /.col-lg-6 -->
+
                         <div class="col-lg-6">
                             <ul class="list-unstyled">
-                                <li><a href="#">Category Name</a>
-                                </li>
-                                <li><a href="#">Category Name</a>
-                                </li>
-                                <li><a href="#">Category Name</a>
-                                </li>
-                                <li><a href="#">Category Name</a>
-                                </li>
+                                <?php
+                            for ($i = $cnt/2+1; $i < $cnt; $i++)
+                        {
+                         ?>
+                                <li><a href="#"><?=$cats[$i]["name"]?></a></li>
+
+                                <?php    
+                        }
+                        ?>
                             </ul>
                         </div>
                     </div>
