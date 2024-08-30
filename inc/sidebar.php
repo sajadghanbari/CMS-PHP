@@ -7,7 +7,7 @@
                     <h4>Blog Search</h4>
                 </div>
                 <div class="card-body">
-                    <form action="" method="post">
+                    <form action="/my projects/my_cms/search.php" method="post">
                         <div class="input-group">
                             <input type="text" class="form-control" name="searchQuery">
                             <span class="input-group-btn">

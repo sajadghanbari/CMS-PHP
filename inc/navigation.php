@@ -29,6 +29,9 @@
             <?php    
             }
             ?>
+            <li class="nav-item">
+                <a class="nav-link" href="admin">Admin</a>
+            </li>
         
         </ul>
         <!--<span class="navbar-text">-->
