@@ -1,6 +1,5 @@
 <?php include "incs/header.php";?>
 <?php include "incs/navigation.php";?>
-
 <body class="sb-nav-fixed">
 
     <div id="layoutSidenav">
@@ -65,9 +64,9 @@
                     <div class="row">
                         <div class="col">
                             <?php
-                                if (isset($_GET["type"]))
-                                {
-                                 switch ($_GET["type"]){
+                        if (isset($_GET["type"]))
+                        {
+                            switch ($_GET["type"]){
                                 case "newpost":
                                     include "incs/newpost.php";
 
@@ -77,21 +76,19 @@
                                     break;
 
                                 default:
-                                    include "incs/postTable.php";
+                                    include "incs/commentTable.php";
                                     break;
 
                                 }
                         }
                         else 
                         {
-                            include "incs/postTable.php";
+                            include "incs/commentTable.php";
                         }
                         ?>
                         </div>
                     </div>
-
                 </div>
-
             </main>
         </div>
     </div>

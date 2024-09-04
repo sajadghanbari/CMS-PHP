@@ -1,5 +1,7 @@
 <?php include "incs/header.php";?>
-<?php include "incs/navigation.php";?>
+<?php include "incs/navigation.php";
+ob_start();
+?>
 
 <body class="sb-nav-fixed">
 
@@ -68,23 +70,23 @@
                                 if (isset($_GET["type"]))
                                 {
                                  switch ($_GET["type"]){
-                                case "newpost":
-                                    include "incs/newpost.php";
+                                case "newuser":
+                                    include "incs/newuser.php";
 
                                     break;
-                                case "editpost";
-                                    include "incs/editpost.php";
+                                case "edituser";
+                                    include "incs/edituser.php";
                                     break;
 
                                 default:
-                                    include "incs/postTable.php";
+                                    include "incs/userTable.php";
                                     break;
 
                                 }
                         }
                         else 
                         {
-                            include "incs/postTable.php";
+                            include "incs/userTable.php";
                         }
                         ?>
                         </div>

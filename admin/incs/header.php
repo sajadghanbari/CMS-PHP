@@ -1,4 +1,16 @@
-<?php include_once "../class/DB.php" ?>
+<?php
+include_once "../class/DB.php"; 
+session_start();
+if (!isset($_SESSION["role"])|| $_SESSION["role"] != "admin") {
+    header("Location: ../");
+}
+if(isset($_GET["Logout"]))
+{
+    unset($_SESSION["role"]);
+    unset($_SESSION["username"]);
+    header("Location: index.php");
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>

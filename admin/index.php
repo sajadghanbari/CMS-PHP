@@ -1,5 +1,8 @@
 <?php include "incs/header.php" ?>
 <?php include "incs/navigation.php" ?>
+<?php
+$reportObj = new Report();
+?>
 
 <body class="sb-nav-fixed">
 
@@ -22,8 +25,8 @@
                             <span>Posts</span>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="post-dropdown">
-                            <a href="post.php" class="dropdown-item">View All Post</a>
-                            <a href="#" class="dropdown-item">Add Post</a>
+                            <a href="/my projects/my_cms/admin/post.php" class="dropdown-item">View All Post</a>
+                            <a href="/my%20projects/my_cms/admin/post.php?type=newpost" class="dropdown-item">Add Post</a>
                         </div>
                         
 
@@ -36,7 +39,7 @@
 
                     </li>
                     <li class="nav">
-                        <a href="#" class="nav-link">
+                        <a href="/my%20projects/my_cms/admin/comment.php" class="nav-link">
                             <i class="fas fa-comment-alt"></i>
                             <span>Comments</span>
                         </a>
@@ -48,6 +51,10 @@
                             <i class="fas fa-user-alt"></i>
                             <span>Users</span>
                         </a>
+                        <div class="dropdown-menu" aria-labelledby="post-dropdown">
+                            <a href="/my%20projects/my_cms/admin/user.php" class="dropdown-item">View All Users</a>
+                            <a href="/my%20projects/my_cms/admin/user.php?type=newuser" class="dropdown-item">Add Users</a>
+                        </div>
 
                     </li>
                 </div>
@@ -62,16 +69,117 @@
                 <div class="container-fluid px-4">
                     <h1 class="mt-4">Dashboard</h1>
                     <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active">Admin</li>
+                        <li class="breadcrumb-item active"><?= $_SESSION["username"] ?></li>
                     </ol>
 
 
 
                 </div>
+                <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="card bg-primary text-white">
+                        <div class="card-heading">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <i class="fa fa-file fa-5x" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="col-md-9 text-right">
+                                        <div class='text-end'><?=$reportObj->getPostCount()?></div>
+                                        <div class="text-end">Posts</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="post.php">
+                            <div class="card-footer text-dark">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card bg-success">
+                        <div class="card-heading">
+                            <div class="container">
+                                <div class="row text-white">
+                                    <div class="col-md-3">
+                                        <i class="fa fa-comments fa-5x"></i>
+                                    </div>
+                                    <div class="col-md-9 text-right">
+                                        <div class="text-end"><?=$reportObj->getCommentCount()?></div>
+                                        <div class="text-end">Comments</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="comment.php">
+                            <div class="card-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card bg-warning text-white">
+                        <div class="card-heading">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <i class="fa fa-user fa-5x"></i>
+                                    </div>
+                                    <div class="col-md-9 text-right">
+                                        <div class='text-end'><?=$reportObj->getUserCount()?></div>
+                                        <div class="text-end"> Users</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="user.php">
+                            <div class="card-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card bg-danger text-white text-sm-start">
+                        <div class="card-heading">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <i class="fa fa-list fa-5x"></i>
+                                    </div>
+                                    <div class="col-md-9 text-sm-start">
+                                        <div class=" text-end"><?=$reportObj->getCategoryCount()?></div>
+                                        <div class="text-end">Categories</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="category.php">
+                            <div class="card-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
             </main>
 
         </div>
+
     </div>
+    
+    
     <?php include "incs/footer.php" ?>
 </body>
 

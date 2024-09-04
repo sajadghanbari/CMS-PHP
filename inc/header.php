@@ -1,3 +1,6 @@
+<?php
+include_once("class/DB.php");
+?>
 <!DOCTYPE html>
 <html lang="en">
 

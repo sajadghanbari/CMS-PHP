@@ -43,7 +43,11 @@
     </div>
     <div class="form-group">
         <label for="status">Status</label>
-        <input type="text" class="form-control" name="status" id="status">
+        <select name="status" required class="form-control">
+            <option value="Draft">Draft</option>
+            <option value="Published">Published</option>
+        </select>
+        <!-- <input type="text" class="form-control" name="status" id="status"> -->
     </div>
     <div class="form-group">
         <label for="image">Image</label>

@@ -4,7 +4,15 @@
 <body>
 <?php
 $postobj = new Post();
-$posts = $postobj->getAllPosts();
+if(isset($_GET["catid"]))
+{
+    $posts = $postobj->getPosts($_GET["catid"]);
+
+}
+else{
+    $posts = $postobj->getAllPosts();
+}
+
 ?>
 <!-- Page Content -->
 <div class="container">
@@ -13,16 +21,11 @@ $posts = $postobj->getAllPosts();
 
         <!-- Blog Entries Column -->
         <div class="col-md-8">
-
-            <h1 class="page-header">
-                Page Heading
-                <small>Secondary Text</small>
-            </h1>
             <?php
             foreach ($posts as $post) {
             ?>
             <h2>
-                <a href="#"><?=$post["title"]?></a>
+                <a href="post.php?pid=<?=$post["id"]?>"><?=$post["title"]?></a>
             </h2>
             <p class="lead">
                 by <a href="index.php"><?=$post["author"]?></a>
@@ -30,8 +33,8 @@ $posts = $postobj->getAllPosts();
             <p><span class="fa fa-clock"></span> Posted on <?= $post["date"] ?></p>   
             <img class="img-fluid" src="http://placehold.it/700x300" alt="">
             <hr>
-            <p><?=$post["content"]?>.</p>
-            <a class="btn btn-primary" href="#">Read More <span class="fa fa-angle-right"></span></a>
+            <p><?=substr($post["content"],0,100)?>.</p>
+            <a class="btn btn-primary" href="post.php?pid=<?=$post["id"]?>">Read More <span class="fa fa-angle-right"></span></a>
             <hr>         
             <?php
             }
