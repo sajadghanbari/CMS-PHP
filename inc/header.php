@@ -1,4 +1,5 @@
 <?php
+session_start();
 include_once("class/DB.php");
 ?>
 <!DOCTYPE html>

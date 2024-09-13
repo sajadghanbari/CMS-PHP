@@ -4,13 +4,28 @@
 <body>
 <?php
 $postobj = new Post();
+$pageLength = 5;
+$postCount = $postobj->getAllPostCount();
+$pageCount = ceil($postCount/$pageLength);
 if(isset($_GET["catid"]))
 {
-    $posts = $postobj->getPosts($_GET["catid"]);
+    $posts = $postobj->getPosts($_GET["catid"]); //برای دسته بندی ها هم باید pagination انجام بشه
 
 }
+elseif(isset($_GET["author"]))
+{
+    $author = $_GET["author"];
+    $posts = $postobj->getPostByAuthor($author);
+}
 else{
+
     $posts = $postobj->getAllPosts();
+    $page = 1;
+    if(isset($_GET["page"]))
+    {
+        $page = $_GET["page"];
+    }
+   $postobj->getAllPostsByPage($pageLength,$page);
 }
 
 ?>
@@ -22,13 +37,17 @@ else{
         <!-- Blog Entries Column -->
         <div class="col-md-8">
             <?php
+            if(count($posts) < 1)
+            {
+                echo "<h2>No Post Available </h2>";
+            }
             foreach ($posts as $post) {
             ?>
             <h2>
                 <a href="post.php?pid=<?=$post["id"]?>"><?=$post["title"]?></a>
             </h2>
             <p class="lead">
-                by <a href="index.php"><?=$post["author"]?></a>
+                by <a href="?author=<?=$post["author"]?>"><?=$post["author"]?></a>
             </p>
             <p><span class="fa fa-clock"></span> Posted on <?= $post["date"] ?></p>   
             <img class="img-fluid" src="http://placehold.it/700x300" alt="">
@@ -49,14 +68,18 @@ else{
 
 
             <!-- Pager -->
-            <ul class="">
-                <li class="btn  btn-outline-primary">
-                    <a href="#">&larr; Older</a>
-                </li>
-                <li class="btn float-md-right btn-outline-primary">
-                    <a href="#">Newer &rarr;</a>
-                </li>
-            </ul>
+            <nav>
+        <ul class="pagination">
+            <?php
+            for ($i = 1; $i <=$pageCount; $i++)
+            {
+                ?>
+                <li class="page-item <?php if($i==$page) echo"active" ?> "><a href="?page=<?=$i?>" class="page-link "><?=$i?></a></li>
+                <?php
+            }
+            ?>
+        </ul>
+    </nav>
 
         </div>
 
@@ -67,7 +90,7 @@ else{
     </div>
     <!-- /.row -->
 
-    <hr>
+
 
     <!-- Footer -->
 <?php include "inc/footer.php"?>

@@ -1,6 +1,7 @@
 <?php
     $commentObj = new Comment();
-    if(isset($_GET["delete"]))
+    $userObj = new User();
+    if(isset($_GET["delete"])&& $userObj->isAdmin($_SESSION["username"]))
     {                         
         $id = $_GET["delete"];
         $commentObj->deleteComment($id);

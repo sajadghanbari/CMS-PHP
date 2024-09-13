@@ -1,6 +1,6 @@
 <?php
     $userObj = new User();
-    if(isset($_GET["delete"]))
+    if(isset($_GET["delete"])&& $userObj->isAdmin($_SESSION["username"]))
     {                         
         $id = $_GET["delete"];
         $userObj->deleteUser($id);

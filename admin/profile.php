@@ -91,7 +91,7 @@ if(isset($_POST["submitEditUser"]))
                             </div>
                             <div class="form-group">
                                 <label for="password">Pasword</label>
-                                <input type="text" class="form-control" name="password" value="<?=$user["password"]?>"
+                                <input type="text" class="form-control" name="password" required
                                     id="password">
                             </div>
 

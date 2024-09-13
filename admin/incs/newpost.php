@@ -3,7 +3,7 @@
     {
         $title = $_POST["title"];
         $categoryId = $_POST["categoryId"];
-        $author = $_POST["author"];
+        // $author = $_POST["author"];
         $status = $_POST["status"];
         $imageName = $_FILES["image"]["name"];
         $imageTemp = $_FILES["image"]["tmp_name"];
@@ -12,7 +12,7 @@
 
         move_uploaded_file($imageTemp,"../image/$imageName");
         $postObj = new Post;
-        $postObj-> addPost($title,$categoryId,$author,$status,$imageName, $tags,$content);
+        $postObj-> addPost($title,$categoryId,$_SESSION["id"],$status,$imageName, $tags,$content);
 
     }
 ?>
@@ -37,10 +37,10 @@
             ?>
         </select>
     </div>
-    <div class="form-group">
+    <!-- <div class="form-group">
         <label for="author">Author</label>
         <input type="text" class="form-control" name="author" id="author">
-    </div>
+    </div> -->
     <div class="form-group">
         <label for="status">Status</label>
         <select name="status" required class="form-control">

@@ -3,13 +3,15 @@
 <?php
 $catobj = new category();
 $categories = $catobj->getallcategories();
-if(isset($_GET["delete"])) 
+$userObj = new user();
+if(isset($_GET["delete"])&& isset($_SESSION["role"])&&$userObj->isAdmin($_SESSION["username"])) 
 {
     $delelteId = $_GET["delete"];
     $catobj->deletecategory($delelteId);
     $pagename = $_SERVER["PHP_SELF"];
     header("Location: $pagename");
 }
+// $error ="";
 if(isset($_POST["addCategorySubmit"]))
 {
     $name = $_POST["name"];
@@ -21,11 +23,16 @@ if(isset($_POST["addCategorySubmit"]))
     } 
     else
     {
-    $catobj->addcategory($name,$description);
-    $pagename = $_SERVER["PHP_SELF"];
-    header("Location: $pagename");
+    try 
+    { $catobj->addcategory($name,$description); } 
+    catch(Exception $e) 
+    { $error="this category already exist"; }
     }
-  
+    if(!$error)
+    {
+        $pagename = $_SERVER["PHP_SELF"];
+        header("Location: $pagename");
+    }
 }
 if(isset($_GET['edit']))
 {
@@ -45,12 +52,19 @@ if(isset($_POST["editCategorySubmit"]))
     $updateDescription = $_POST["description"];
     if($updateName== ""|| empty($updateName) )
     {
-        $error = "Enter name of category";
+        $error = "Enter name of a category";
 
     }
     else
     {
-        $catobj->updatecategory($updateId,$updateName,$updateDescription);
+        try{$catobj->updatecategory($updateId,$updateName,$updateDescription);
+        }
+        catch(Exception $e)
+        { $error= "This Name already exsit"; }
+
+    }
+    if(!$error)
+    {
         $pagename = $_SERVER["PHP_SELF"];
         header("Location: $pagename");
     }

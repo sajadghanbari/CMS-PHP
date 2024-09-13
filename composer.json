@@ -1,0 +1,12 @@
+{
+    "name": "sajji/my_cms",
+    "require": {
+        "phpmailer/phpmailer": "^6.9",
+        "pusher/pusher-php-server": "^7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sajji\\MyCms\\": "src/"
+        }
+    }
+}

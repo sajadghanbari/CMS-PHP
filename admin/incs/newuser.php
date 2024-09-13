@@ -1,5 +1,6 @@
 <?php
 ob_start();
+$error="";
     if (isset($_POST["submitNewUser"]))
     {
         $username = $_POST["username"];
@@ -9,12 +10,20 @@ ob_start();
         $email = $_POST["email"];
         $role = $_POST["role"];
         $userObj = new User();
-        $userObj->addUser($username, $password, $firstName, $lastName, $email,$role);
-        $page = $_SERVER["PHP_SELF"];
-        header("Location:$page");
+        try{
+            $userObj->addUser($username, $password, $firstName, $lastName, $email,$role);
+        }
+        catch(Exception $e){$error = "This Name Already Exsit";}
+        if(!$error)
+        {
+            $page = $_SERVER["PHP_SELF"];
+            header("Location:$page");
+        }
+
     }
 ?>
 <form action="" method="post" enctype="multipart/form-data">
+    <span class="alert-danger"><?=$error?></span>
     <div class="form-group">
         <label for="username">User Name</label>
         <input type="text" class="form-control" name="username" id="username">

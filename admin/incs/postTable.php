@@ -1,6 +1,7 @@
 <?php
     $postObj = new Post();
-    if(isset($_GET["delete"]))
+    $userObj = new User();
+    if(isset($_GET["delete"])&& $userObj->isAdmin($_SESSION["username"]))
     {                         
         $id = $_GET["delete"];
         $postObj->deletePost($id);
@@ -59,7 +60,8 @@
                 <th>Image</th>
                 <th>Tags</th>
                 <th>Content</th>
-                <th>Comment Count</th>
+                <th>Comment</th>
+                <th>View</th>
                 <th>Delete</th>
                 <th>Edit</th>
             </tr>
@@ -84,8 +86,9 @@
                 <td><?=$post["tags"]?></td>
                 <td><?=$post["content"]?></td>
                 <td><?=$post["comment_count"]?></td>
-                <td><a href="?delete=<?=$post["id"]?>" class="btn btn-danger">Delete</a></td>
-                <td><a href="?type=editpost&pid=<?=$post["id"]?>" class="btn btn-warning">Edit</a></td>
+                <td><?=$post["view_count"]?></td>
+                <td><a onclick="return confirmMassage()" href="?delete=<?=$post["id"]?>" class="btn btn-danger">Delete</a></td>
+                <td><a onclick="return confirmMassage()" href="?type=editpost&pid=<?=$post["id"]?>" class="btn btn-warning">Edit</a></td>
             </tr>
             <?php
                                     }
@@ -93,4 +96,6 @@
                                     ?>
         </tbody>
     </table>
+    <script src="js/datatables.js"></script>
+
 </form>

@@ -24,3 +24,25 @@
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+<script>
+    Pusher.logToConsole = true;
+
+var pusher = new Pusher('024cfc8920c19b59aac9', {
+  cluster: 'ap2'
+});
+
+var channel = pusher.subscribe('my-channel');
+channel.bind('my-event', function(data) {
+  alert(JSON.stringify(data));
+});
+</script>
+</head>
+<body>
+<h1>Pusher Test</h1>
+<p>
+Try publishing an event to channel <code>my-channel</code>
+with event name <code>my-event</code>.
+</p>
+</body>
+</script>

@@ -1,5 +1,6 @@
 <?php
 ob_start();
+$error = "";
     $userObj = new User();
     if (isset($_GET["uid"]))
     {
@@ -15,12 +16,16 @@ ob_start();
         $lastName = $_POST["lastname"];
         $email = $_POST["email"];
         $role = $_POST["role"];
-        $userObj->updateUser($id,$userName,$password,$firstName,$lastName,$email,$role);
+        try {$userObj->updateUser($id,$userName,$password,$firstName,$lastName,$email,$role);}
+        catch (Exception $e) {$error = "this name already used";}
+        if(!$error){
         $page = $_SERVER["PHP_SELF"];
         header("Location: $page"); 
+        }
     }
 ?>
 <form action="" method="post" enctype="multipart/form-data">
+    <span class="alert-danger"></span>
     <div class="form-group">
         <label for="username">User Name</label>
         <input type="text" class="form-control" name="username" value="<?=$user["username"]?>" id="username">

@@ -63,9 +63,18 @@ class Category extends DB
 }
 class Post extends DB
 {
+    public function getAllPostCount()
+    {
+        return $this->connect()->query("SELECT count(id) as cnt  from posts")->fetchAll(PDO::FETCH_ASSOC)[0]["cnt"];
+
+    }
     public function getAllPosts()
     {
-        return $this->connect()->query("select * from posts")->fetchAll(PDO::FETCH_ASSOC);
+        $query = "SELECT p.id,category_id,concat(u.first_name,' ',u.last_name) 
+        as author,title,date,p.image,content,tags,status,view_count,(SELECT count(id) from comments WHERE comments.post_id=p.id) 
+        AS comment_count from posts as p
+        INNER JOIN users as u on u.id=p.author_id";
+        return $this->connect()->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
     public function searchPost($searchQuery)
     {
@@ -84,7 +93,7 @@ class Post extends DB
         $qImage = $this->connect()->quote($image);
         $qTags = $this->connect()->quote($tags);
         $qContent = $this->connect()->quote($content);
-        $query = "insert into posts (title,author,category_id,status,image,tags,content,comment_count,date) values ($qTitle,$qAuthor,$qCategoryId,$qStatus,$qImage,$qTags,$qContent,0,now())";
+        $query = "insert into posts (title,author_id,category_id,status,image,tags,content,comment_count,date) values ($qTitle,$qAuthor,$qCategoryId,$qStatus,$qImage,$qTags,$qContent,0,now())";
         $this->connect()->query($query);
 
 
@@ -93,8 +102,9 @@ class Post extends DB
     public function deletePost($postId)
     {
         $qId = $this->connect()->quote($postId);
-        $query = "delete from posts where id=$qId";
-        $this->connect()->query($query);
+        $query = "DELETE from posts where id=$qId";
+        // $this->connect()->query($query);
+        return $this->connect()->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
     public function getPost($id)
     {
@@ -102,23 +112,24 @@ class Post extends DB
         $query = "select * from posts where id=$id";
         return $this->connect()->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function updatePost($id,$title,$categoryId, $author,$status,$image,$tags,$content)
+    public function updatePost($id,$title,$categoryId,$status,$image,$tags,$content)
     {
         $qId = $this->connect()->quote($id);
         $qTitle = $this->connect()->quote($title);
         $qCategoryId = $this->connect()->quote($categoryId);
-        $qAuthor = $this->connect()->quote($author);
+        // $qAuthor = $this->connect()->quote($author);
         $qStatus = $this->connect()->quote($status);
         $qImage = $this->connect()->quote($image);
         $qTags = $this->connect()->quote($tags);
         $qContent = $this->connect()->quote($content);
-        $query = "update posts set title=$qTitle , category_id=$qCategoryId ,author=$qAuthor, status=$qStatus, image=$qImage , tags=$qTags,content=$qContent where id=$qId";
+        $query = "update posts set title=$qTitle , category_id=$qCategoryId , status=$qStatus, image=$qImage , tags=$qTags,content=$qContent where id=$qId";
         $this->connect()->query($query);
     }
     public function getPosts($catid)
     {
         $qCatid = $this->connect()->quote($catid);
-        $query = "select * from posts where category_id=$qCatid";
+        $query = "SELECT p.id,category_id,concat(u.first_name,' ',u.last_name) as author,title,date,p.image,content,tags,status,view_count,(SELECT count(id) from comments WHERE comments.post_id=p.id) AS comment_count from posts as p
+    INNER JOIN users as u on u.id=p.author_id where status='published' and category_id=$qCatid";
         return $this->connect()->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
     public function changePostStatus($ar , $status)
@@ -132,6 +143,24 @@ class Post extends DB
         $joinedAr = join(",", $ar);
         $query = "DELETE FROM posts  where id in($joinedAr)";
         $this->connect()->query($query);
+    }
+    public function getPostByAuthor($author)
+    {
+        $qAuthor = $this->connect()->quote($author);
+        $query = "SELECT * from posts where status='Published' and author=$qAuthor";
+        return $this->connect()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function incrementView($pid)
+    {
+        $qPid = $this->connect()->quote($pid);
+        $query = "UPDATE posts set view_count=view_count+1 where id=$pid";
+        $this->connect()->query($query);
+    }
+    public function getAllPostsByPage($pageLength, $page)
+    {
+        $pageLimit = $page*$pageLength - $pageLength;
+        return $this->connect()->query("SELECT p.id,category_id,concat(u.first_name,' ',u.last_name) as author,title,date,p.image,content,tags,status,view_count,(SELECT count(id) from comments WHERE comments.post_id=p.id) AS comment_count from posts as p
+    INNER JOIN users as u on u.id=p.author_id limit $pageLimit,$pageLength")->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 class Comment extends DB
@@ -180,7 +209,8 @@ class User extends DB
     public function addUser($username,$password,$firstName,$lastName,$email,$role)
     {
         $qUsername = $this->connect()->quote($username);
-        $qPassword = $this->connect()->quote($password);
+        $ops = ["cost"=>11];
+        $qPassword = $this->connect()->quote(password_hash($password, PASSWORD_BCRYPT,$ops));
         $qEmail = $this->connect()->quote($email);
         $qFirstName = $this->connect()->quote($firstName);
         $qLastName = $this->connect()->quote($lastName);
@@ -204,7 +234,8 @@ class User extends DB
     {
         $qId = $this->connect()->quote($id);
         $qUsername = $this->connect()->quote($username);
-        $qPassword = $this->connect()->quote($password);
+        $ops = ["cost"=>11];
+        $qPassword = $this->connect()->quote(password_hash($password, PASSWORD_BCRYPT,$ops));
         $qFirstName = $this->connect()->quote($firstName);
         $qLastName = $this->connect()->quote($lastName);
         $qEmail = $this->connect()->quote($email);
@@ -216,7 +247,57 @@ class User extends DB
     public  function getUserByUsrename($username)
     {
         $qUsername = $this->connect()->quote($username);
-        return $this->connect()->query("SELECT * FROM users WHERE username=$qUsername ")->fetch(PDO::FETCH_ASSOC);
+        $all = $this->connect()->query("SELECT * FROM users WHERE username=$qUsername ")->fetchAll(PDO::FETCH_ASSOC);
+        if(count($all) > 0)
+        {
+            return $all[0];
+        }
+        else
+        {
+            return null;
+        }    }
+    public  function getUserByEmail($email)
+    {
+        $qEmail = $this->connect()->quote($email);
+        $all = $this->connect()->query("SELECT * FROM users WHERE email=$qEmail ")->fetchAll(PDO::FETCH_ASSOC);
+        if(count($all) > 0)
+        {
+            return $all[0];
+        }
+        else
+        {
+            return null;
+        }
+    }
+    public function registerUser($username,$password,$email)
+    {
+        $qUsername = $this->connect()->quote($username);
+        $ops = ["cost"=>11];
+        $qPassword = $this->connect()->quote(password_hash($password, PASSWORD_BCRYPT,$ops));
+        $qEmail = $this->connect()->quote($email);
+        $query = "INSERT into users (username,password,email,role) value ($qUsername,$qPassword,$qEmail,'subscriber')";
+        $this->connect()->query($query);
+    }
+    public function isAdmin($username)
+    {
+        $qUsername = $this->connect()->quote($username);
+        $query = "SELECT role from users where username=$qUsername";
+        $result = $this->connect()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+        if(count($result) > 0)
+        {
+            return $result[0]["role"] == "admin";
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public function updateToken($userid,$token)
+    {
+        $qUserid = $this->connect()->quote($userid);
+        $qToken = $this->connect()->quote($token);
+        $query = "UPDATE users set token=$qToken where id=$qUserid";
+        $this->connect()->query($query);
     }
 }
 class Report extends DB
@@ -246,4 +327,37 @@ class Report extends DB
         return $result["cnt"];
     }
 }
+class OnlineUsers extends DB
+{   
+
+    public function getOnlineUsers()
+    {
+        $sessionId = session_id();
+        $time = time();
+        $query = "SELECT * from online_users where session='$sessionId'";
+        $currentUser = $this->connect()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+        if(count($currentUser) > 0) 
+        {
+            $query = "UPDATE online_users set time=$time where session='$sessionId' ";
+            $this->connect()->query($query);
+        }
+        else 
+        {
+        $query = "INSERT into online_users(session,time) values('$sessionId',$time)";
+        $this->connect()->query($query);
+        }
+        $timeOffset = 60;
+        $offlineTime = $time - $timeOffset;
+        return $this->connect()->query("SELECT count(id) as cnt from online_users where time >$offlineTime")->fetchAll(PDO::FETCH_ASSOC)[0]["cnt"];
+    }
+}
+class MailConfig
+{
+    const Host = "sandbox.smtp.mailtrap.io";
+    const Port = 2525;
+    const Username = "f6e38f2fea724e";
+    const Password = "089a9e4553bc02";
+    const Auth = "PLAIN";
+}
+
 ?>

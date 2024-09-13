@@ -1,14 +1,15 @@
 <?php
 $postObj = new Post();
     if(isset($_GET["pid"]))
-    {
-        $currentPost = $postObj->getPost($_GET["pid"]);
+    {   
+        $id = $_GET["pid"];
+        $currentPost = $postObj->getPost($id);
     }
     if(isset($_POST["submitEditpost"]))
     {
 
             
-        $postObj->updatePost($_POST["id"],$_POST["title"],$_POST["categoryId"],$_POST["author"],$_POST["status"],$_FILES["image"]["name"],$_POST["tags"],$_POST["content"]);
+        $postObj->updatePost($_POST["id"],$_POST["title"],$_POST["categoryId"],$_POST["status"],$_FILES["image"]["name"],$_POST["tags"],$_POST["content"]);
         $pagename = $_SERVER["PHP_SELF"];
         header("Location: $pagename");
     }
@@ -38,10 +39,10 @@ $postObj = new Post();
             ?>
         </select>
     </div>
-    <div class="form-group">
+    <!-- <div class="form-group">
         <label for="author">Author</label>
         <input type="text" class="form-control" name="author" id="author" value="<?=$currentPost[0]["author"]?>">
-    </div>
+    </div> -->
     <div class="form-group">
         <label for="status">Status</label>
         <select name="status" id="status" class="form-control">
@@ -75,8 +76,9 @@ $postObj = new Post();
     <input type="hidden" name="lastImage" value="<?=$currentPost[0]["image"]?>">
     <div class="form-group">
         <label for="content">Content</label>
-        <textarea name="content" id="content" class="form-control" rows="10"
+        <textarea name="content" id="editor" class="form-control" rows="10"
             cols="30"><?=$currentPost[0]["content"]?></textarea>
     </div>
     <input type="submit" name="submitEditpost" id="submitEditpost" value="Add Post" class="btn btn-lg btn-primary">
 </form>
+
